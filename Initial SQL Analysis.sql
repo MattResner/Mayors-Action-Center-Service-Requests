@@ -1,0 +1,27 @@
+--SELECT * FROM MayorsActionCenterTickets
+
+SELECT 
+S.INCIDENT_ADDRESS__C
+,COUNT(DISTINCT(S.ObjectID)) AS RepeatTickets
+--,MAX(S.KEYWORD__C)
+--,MAX(S.SUBCATEGORY__C)
+--,MIN(S.CLOSEDDATE) MINDATE
+--,MAX(S.CLOSEDDATE) MAXDATE
+
+
+FROM (SELECT * FROM MayorsActionCenterTickets) AS S
+
+GROUP BY S.INCIDENT_ADDRESS__C
+ORDER BY 2 DESC
+
+-- Easter Egg of Potential Data Quality Issue (200 E Washington St is City Hall)
+SELECT * FROM MayorsActionCenterTickets MACT
+
+WHERE MACT.INCIDENT_ADDRESS__C LIKE '%3798 N EMERSON AVE%'
+ORDER BY MACT.KEYWORD__C DESC
+
+SELECT 
+
+MIN(ClosedDATE),
+MAX(ClosedDATE)
+FROM MayorsActionCenterTickets
