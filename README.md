@@ -7,8 +7,14 @@ For more information surrounding the Mayor's Action Center visit their website a
 The initial Service Case dataset can be downloaded at https://data.indy.gov/datasets/mayors-action-center-service-cases/explore
 
 In this project I take the initial data on Mayor's Action Center Service Requests and transform the data by:
+
 	1. Loading, batching and geocoding the data with  tidygeocoder (Complete)
+ 
 	2. Generating categorical variables based on request category with plyr (Complete)
+ 
 	3. Selecting/renaming/grouping the data with sqldf (Complete)
-	4. Joining demographic data by census tract and block with tidycensus
-  	5. Analyzing the data using inference 
+ 
+	4. Joining demographic data by census tract and block with tidycensus (In Progress)
+ 
+  	5. Analyzing the data using inference (Not Started)
+   
