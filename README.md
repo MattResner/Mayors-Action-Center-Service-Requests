@@ -20,3 +20,5 @@ In this project I take the initial data on Mayor's Action Center Service Request
    
 
 You can explore the commented code in the file named "Mayors Action Center Project Streamlined.R" which can be found in the sidebar. 
+
+If you have any feedback or recommendations for how to analyize this data please reach out to me on LinkedIn at https://www.linkedin.com/in/matthewresner/.
