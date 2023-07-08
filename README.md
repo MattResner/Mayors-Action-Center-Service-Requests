@@ -1,4 +1,4 @@
-# Regression of Indianapolis Mayors Action Center Ticket Counts on US Census Demographic Characteristics by Census Tract
+# Analysis of Indianapolis Mayors Action Center Ticket Counts on US Census Demographic Characteristics by Census Tract
 
 Welcome to my analysis of Indianapolis Mayor's Action Center service requests. The Mayor's Action Center (and the Request Indy App) are avenues of submitting citizen service requests and complaints to the City of Indianapolis. Requests can represent resident issues such as malfunctioning street lights, loose dogs, or tall grass. 
 
@@ -11,4 +11,4 @@ In this project I take the initial data on Mayor's Action Center Service Request
 	2. Generating categorical variables based on request category with plyr (Complete)
 	3. Selecting/renaming/grouping the data with sqldf (Complete)
 	4. Joining demographic data by census tract and block with tidycensus
-  5. Analyzing the data using inference 
+  	5. Analyzing the data using inference 
