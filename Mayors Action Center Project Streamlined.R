@@ -1,64 +1,46 @@
+#Step 1: Creating Data frame and Matching Addresses to get the Census Tract
 
+    # Reading in the CSV to a new Data Frame
+    library(readr)
+    library(readxl)
+    MACDF <- read_csv("C:/Users/mresner.Keteres/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/1. MACTicketOriginal.csv")
+    View(MACDF)
 
+    # Adding an Indexing variable to iterate over as well as the state for geocoding
+    MACDF$index <- 1:nrow(MACDF)
+    MACDF$State <- 'IN'
 
-#Step 1: Creating Dataframe and Matching Addresses to get the Census Tract
+    #Splitting the MACDF into many data frames within a list so we can iterate through them using the tidy geocoder
+    chunk <- 10000
+    n <- nrow(MACDF)
+    r  <- rep(1:ceiling(n/chunk),each=chunk)[1:n]
+    d <- split(MACDF,r)
+    #Checking to see if the chunking operation was successful to be below the US Census API row limit of 10000
+    nrow(d$`1`)
+    View(d$`1`)
 
+    
     # Geocoder Reference
     #https://jessecambon.github.io/tidygeocoder/
 
-    # Census Geocoder Libraries
+    # Load Tidy Census and Geocoder Libraries
     
       library(tidygeocoder)
       library(tidycensus)
       library(tidyverse)
 
-    #Testing my list 
-      
-        #View(d[[1]]$index[1])
-        # 
-        # length(d)
-        # #i <- 1
-        # nrow(d[[1]]$index)
-    
-        View(DFTEST)
-
-
-
-    #Inner Loop Test
-        DFTEST=data.frame()
-        for (j in d[[1]]$index){
-          # Function
-          output = d[[1]]$index[j]
-          DFTEST=rbind(DFTEST,output)
-        }
-        
-        View(DFTEST)
-
-
-    
-    #Outer Loop Test
-        DFTEST=data.frame()
-        
-        #Outer Loop
-        for (i in length(d)){
-          # inner loop
-          for (j in d[[1]]$index){
-            # Function
-            output = d[[1]]$index[j]
-            DFTEST=rbind(DFTEST,output)
-          }
-        }
-        View(DFTEST)
-
-    #Testing API Call on first dataframe in d list d[[1]]
+   
+    #Testing Tidy Census Call on first dataframe in d list d[[1]]
         DFTESTLIST =data.frame()
         DFTESTLIST <- d[[1]] %>%
           geocode(street = INCIDENT_ADDRESS__C, city = CITY__C, state = State, method = "census", full_results = TRUE, api_options = list(census_return_type = 'geographies'))
         
         View(DFTESTLIST)
-        #functions perfectly
+        #functions perfectly for 9,087 unique addresses in the dataframe of 10000 tickets. 
   
-    #Writing API For-Loop for all Addresses in all subset dataframes in the list "d"
+    # Writing Tidy Geocoder For-Loop for all Addresses in all subset data frames in the list "d"
+        # Beware this process will take a few hours to iterate.
+        # Make sure your computer is in a stable place with power before beginning
           MACDFMatch=data.frame()
         View(d) 
         i =0
@@ -155,10 +137,8 @@
       
 
 #Step 3. Calling Census API to Connect Census Tracts with Demographic Information
-        
-  
 
-
+      
 # Tidy Census Use
 
 
