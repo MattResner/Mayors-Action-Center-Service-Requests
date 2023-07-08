@@ -19,4 +19,4 @@ In this project I take the initial data on Mayor's Action Center Service Request
   	5. Analyzing the data using inference (Not Started)
    
 
-You can explore the commented code in the file named Mayors Action Center Project Streamlined.R
+You can explore the commented code in the file named "Mayors Action Center Project Streamlined.R" which can be found in the sidebar. 
