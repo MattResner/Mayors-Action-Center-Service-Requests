@@ -20,10 +20,11 @@
     View(d$`1`)
 
     
-    # Geocoder Reference
+    # How to use Tidy Census to call Census API Reference
     #https://jessecambon.github.io/tidygeocoder/
 
     # Load Tidy Census and Geocoder Libraries
+    # you will need to get an access key from the US Census to call the API. They are free
     
       library(tidygeocoder)
       library(tidycensus)
@@ -135,12 +136,14 @@
       write.csv(MACDFGroupedTract, "C:/Users/mresner.KETERES/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/MACDFGroupedTract.csv", row.names=FALSE)
       
       
-
 #Step 3. Calling Census API to Connect Census Tracts with Demographic Information
 
       
-# Tidy Census Use
-
+      # Tidy Census Use
+      library(tidycensus)
+      
+      # Writing a loop to match demographic information with each census tract 
+      
 
 
 
