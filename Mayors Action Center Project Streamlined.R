@@ -138,9 +138,16 @@
       
 #Step 3. Calling Census API to Connect Census Tracts with Demographic Information
 
+      #Loading the Excel File
+      library(readr)
+      library(readxl)
+      MACDFGroupedTract <- read_csv("C:/Users/mresner.Keteres/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/4.MACDFGroupedTract.CSV")
+      View(MACDFGroupedTract)
       
       # Tidy Census Use
       library(tidycensus)
+      #Selecting Variables
+      DHCVAR <- load_variables(2020,"dhc" )
       
       # Writing a loop to match demographic information with each census tract 
       
