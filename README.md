@@ -14,9 +14,9 @@ In this project I take the initial data on Mayor's Action Center Service Request
  
 	3. Selecting/renaming/grouping the data with sqldf (Complete)
  
-	4. Joining demographic data by census tract and block with tidycensus (In Progress)
+	4. Joining demographic data by census tract and block with tidycensus (Complete)
  
-  	5. Analyzing the data using inference (Not Started)
+  5. Analyzing the data using inference (Complete)
    
 
 You can explore the commented code in the file named "Mayors Action Center Project Streamlined.R" which can be found in the sidebar. 
