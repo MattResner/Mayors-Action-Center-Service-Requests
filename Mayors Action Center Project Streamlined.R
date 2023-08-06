@@ -145,9 +145,48 @@
       View(MACDFGroupedTract)
       
       # Tidy Census Use
+      install.packages("tidycensus")  
       library(tidycensus)
+      census_api_key("81ec59eceb4f13d873b70e45a9a8e5a1a88a984b", install = TRUE)
       #Selecting Variables
       DHCVAR <- load_variables(2020,"dhc" )
+      
+      #Test Calling Marion County Population
+      
+      MarionPop <- get_decennial(
+        geography = "county",
+        variables = "P1_001N",
+        state = "IN",
+        county = "Marion",
+        year = 2020
+      )
+      
+      #Calling Population on the Tract Level
+      #tract = "TTRACT",
+      
+      MarionPop <- get_decennial(
+        geography = "TTRACT",
+        variables = "P1_001N",
+        
+        state = "IN",
+        county = "Marion",
+        year = 2020
+      )
+      
+      
+      MarionPop <- get_decennial(
+        geography = "TTRACT",
+        variables = c(  
+                        population = "P1_001N",
+                        occHousingPop = "H8_001N"
+              
+                                       ),
+          
+        state = "IN",
+        county = "Marion",
+        year = 2020,
+        sumfile = "pl"
+      )
       
       # Writing a loop to match demographic information with each census tract 
       
