@@ -228,4 +228,40 @@ for (i in 1:2 {
   
   View(DFTESTLIST)
   #functions perfectly
+  
+  
+  MarionPop <- get_decennial(
+    geography = "county",
+    variables = "H8_001N",
+    state = "IN",
+    county = "Marion",
+    output = "wide",
+    year = "2020",
+    sumfile = "dhc"
+    show_call = TRUE
+  )
+  
+  #Calling Population on the Tract Level
+  #tract = "TTRACT",
+  
+  censusVars <- c(White = "P2_005N", 
+                  Black = "P2_006N", 
+                  Asian = "P2_008N", 
+                  Hispanic = "P2_002N")
+  
+  
+  censusVars <- c(population = "P1_001N",
+                  Hispanic = "P2_002N")
+  #True Variables H8_001N is not working for some reason
+  censusVars <- c(population = "P1_001N",
+                  occHousingPop = "H8_001N")
+  
+  
+  MarionCo <- get_decennial(
+    geography = "TRACT",
+    variables = censusVars,
+    state = "IN",
+    county = "Marion",
+    output = "wide",
+    year = "2020")
                  

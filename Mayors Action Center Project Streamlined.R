@@ -206,9 +206,11 @@
       ACSVAR <- load_variables(2021,"acs5" )
       
       #We are going to Connect to ACS estimates for median income, GINI COEF, population & population density
-      # Total Population B01003_001
-      # GINI B19083
-      # Median Income in the last 12 months B06011_001
+        # Total Population B01003_001
+        # GINI B19083
+        # Median Income in the last 12 months B06011_001
+      
+      #Making a list of variables and years
       
       my_vars <- c(
         totalPop = "B01003_001",
@@ -218,7 +220,9 @@
       
       YearsinData <- sqldf("select DISTINCT createYear as Year FROM MACDFGroupedTractYear")
       
-      Years <- lst("2015", "2016", "2017", "2018", "2019", "2021", "2022")
+      Years <- lst(2015, 2016, 2017, 2018, 2019, 2021) #There's no ACS data in the API for 2020 and 2022. 2020 had sampling issues and 2022 hasn't been released at the time of the analysis  
+      
+      # Testing the API call for a single year
       
       MyData <- get_acs(
         geography = "TRACT",
@@ -226,12 +230,14 @@
         state = "IN",
         county = "Marion",
         output = "wide",
-        year = Years,
+        year = 2025,
         survey = "acs5"
       )
       
+      # looping using map_dfr to get all the matching data we need
+      
       AcsData <- map_dfr(
-        years,
+        Years,
         ~ get_acs(
           geography = "TRACT",
           variables =  my_vars,
@@ -240,20 +246,59 @@
           output = "wide",
           year = .x,
           survey = "acs5",
-          geometry = FALSE
+          geometry = FALSE,
+          show_call = TRUE
         ),
        .id = "Year"
-      )
+      ) 
         
+      # Removing Observations where year is 2020 and 2022 from MACDFGroupedTractYear
       
+      MACDFGroupedTractYearFiltered <- filter(MACDFGroupedTractYear, !createYear %in% c(2020, 2022))
       
-      
-       
+      # Matching ACS Data and Aggregated and Filtered MAC Service Request Data
     
+      # Extracting the Census Tract from GeoID
+      
+      AcsData$censusTract <- substring(AcsData$GEOID,6,11)
+      
+      # Renaming Year in AcsData
+      
+      AcsData$createYear <-AcsData$Year
+      
+      
+      #Joining the Census Data to the MAC 
+    
+      AcsData$censusTract <-  as.numeric(AcsData$censusTract) 
+      
+      RegressionData <- left_join(MACDFGroupedTractYearFiltered, AcsData, by=c('censusTract','createYear'))
+      
+      #OH Snap. Just realized that I need to geocode the data before 2020 using the 2010 census so that the census tracts match the 2015-2019 ACS estimates
+      
+      RegressionData2021 <- filter(RegressionData, createYear== '2021')
 
-
-
-
-
-
-
+      # Dropping NAs from the 2021 data. They are from cities other than indianapolis somehow
+      
+      RegressionData2021 <- RegressionData2021 %>% drop_na(NAME)
+      
+      
+      # Saving the 2021 file for later
+      
+      write.csv(RegressionData2021, "C:/Users/mresner.KETERES/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/RegressionData2021.csv", row.names=FALSE)
+      
+      # Writing the Linear Model
+      
+      RegressionData2021$Year <-  as.factor(RegressionData2021$Year) 
+      
+      RegressionData2021 <- RegressionData2021 %>% drop_na(medianIncomeE)
+      
+      RegressionResults2021 <- lm(snowIce~totalPopE+medianIncomeE+giniE, data=RegressionData2021)
+      
+      summary(RegressionResults2021)
+      
+      
+      
+      
+      
+      
+      
