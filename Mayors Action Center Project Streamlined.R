@@ -87,15 +87,36 @@
       MACDFCategoryBool$category2 <- MACDFCategoryBool$category
       MACDFCategoryBool <- MACDFGroupedAddress %>% mutate(dummy=1) %>%
         spread(key=category2,value=dummy, fill=0)
-    # Renaming variables with Spaces
-      MACDFCategoryBool <- plyr::rename(MACDFCategoryBool, c())
+
+    #Writing a CSV to save progress on MACDFCategoryBool
+      write.csv(MACDFCategoryBool, "C:/Users/mresner.KETERES/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/3.MACDFCategoryBool", row.names=FALSE)
+    
+    #Reading the CSV back in  
+      library(readr)
+      MACDFCategoryBool <- read_csv("C:/Users/mresner.KETERES/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/3.MACDFCategoryBool.csv")
+    
+      #adding in Date Extracts for Year and Month from Create Date
       
-    #Writing a CSV to save MACDFCategoryBool
-      write.csv(MACDFCategoryBool, "C:/Users/mresner.KETERES/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/MACDFCategoryBool.csv", row.names=FALSE)
-       
-    # Grouping by address using SQLDF due to familiarity with SQL syntax
+      #Testing Substring Methods
+      
+      date <-  '2022-01-31'
+      Year <- substring(date,1,4)
+      month <- substring(date,6,7)
+      
+      #writing year and month columns to MACDFCategoryBool using substring
+   
+      MACDFCategoryBool$createYear <-substring(MACDFCategoryBool$createdDate,1,4)
+      MACDFCategoryBool$createMonth <-substring(MACDFCategoryBool$createdDate,6,7)
+      
+      # Saving the new columns in CSV
+      write.csv(MACDFCategoryBool, "C:/Users/mresner.KETERES/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/3.MACDFCategoryBool.csv", row.names=FALSE)
+    
+      # Grouping by address using SQLDF due to familiarity with SQL syntax
       install.packages("sqldf")  
       library("sqldf")
+     
+       
+      
       #choosing to merge traffic signs and signal categories with each other as well as illegal dumping and trash together
       MACDFGroupedAddress <- sqldf("select incidentAddress ,township ,city ,zip ,councilDistrict ,censusTract ,censusBlock 
                                   ,COUNT(objectid) AS totalTickets
@@ -123,6 +144,7 @@
       #Writing a CSV to save MACDFGroupedBlock
       write.csv(MACDFGroupedBlock, "C:/Users/mresner.KETERES/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/MACDFGroupedBlock.csv", row.names=FALSE)
       
+      
       MACDFGroupedTract <- sqldf("select township ,city ,zip ,councilDistrict ,censusTract 
                                   ,COUNT(objectid) AS totalTickets
                                   ,SUM([Abandoned Vehicle]) AS abandonedVehicle ,SUM(Alley) As alley ,SUM(Animal) AS animal ,SUM([Basketball Goal]) AS basketballGoal ,SUM([Berms/Shoulder]) AS bermsShoulder ,SUM(Bridge) AS bridge ,SUM([CEG Referral]) AS CEGReferral
@@ -132,65 +154,102 @@
                                   ,SUM([Sidewalks/Curbs]) AS sidewalksCurbs ,SUM([Signs/Traffic Signs]+[Signs/Traffic+Signs]+[Traffic Signals]) AS trafficSignsSignals ,SUM([Snow/Ice]) AS snowIce ,SUM([Spray Ground]) AS sprayGround ,SUM(Streets) AS streets
                                    FROM MACDFCategoryBool GROUP BY township, city, zip, councilDistrict, censusTract")
       
+      MACDFGroupedTractYearMonth <- sqldf("select township ,city ,zip ,councilDistrict ,censusTract, createYear, createMonth
+                                  ,COUNT(objectid) AS totalTickets
+                                  ,SUM([Abandoned Vehicle]) AS abandonedVehicle ,SUM(Alley) As alley ,SUM(Animal) AS animal ,SUM([Basketball Goal]) AS basketballGoal ,SUM([Berms/Shoulder]) AS bermsShoulder ,SUM(Bridge) AS bridge ,SUM([CEG Referral]) AS CEGReferral
+                                  ,SUM(Chuckhole) AS chuckhole ,SUM(Contractor) AS contractor ,SUM([Debris/Litter]) AS debrisLitter ,SUM(Disability) AS disability ,SUM([Emergency Management]) AS emergencyManagement ,SUM([Environmental Concern]) AS environmentalConcern 
+                                  ,SUM(Forestry) AS forestry ,SUM(Graffiti) AS graffiti ,SUM(Guardrail) AS guardrail ,SUM([Illegal Dumping]+[Illegal Dumping and Junk/Trash]) AS illegalDumping ,SUM([Infrastructure Violation]) AS infrastructureViolation
+                                  ,SUM(Manhole) AS manhole ,SUM([New Construction]+[Ongoing Construction]) AS construction,SUM(Odor) AS odor,SUM([Operation Night Light]) AS operationNightLight ,SUM([Outside Entity]) AS outsideEntity ,SUM(Parks) AS parks ,SUM([Sanitary Sewer]) AS sanitarySewer
+                                  ,SUM([Sidewalks/Curbs]) AS sidewalksCurbs ,SUM([Signs/Traffic Signs]+[Signs/Traffic+Signs]+[Traffic Signals]) AS trafficSignsSignals ,SUM([Snow/Ice]) AS snowIce ,SUM([Spray Ground]) AS sprayGround ,SUM(Streets) AS streets
+                                   FROM MACDFCategoryBool GROUP BY township, city, zip, councilDistrict, censusTract, createYear, createMonth")
+      
+      MACDFGroupedTractYear <- sqldf("select township ,city ,zip ,councilDistrict ,censusTract, createYear
+                                  ,COUNT(objectid) AS totalTickets
+                                  ,SUM([Abandoned Vehicle]) AS abandonedVehicle ,SUM(Alley) As alley ,SUM(Animal) AS animal ,SUM([Basketball Goal]) AS basketballGoal ,SUM([Berms/Shoulder]) AS bermsShoulder ,SUM(Bridge) AS bridge ,SUM([CEG Referral]) AS CEGReferral
+                                  ,SUM(Chuckhole) AS chuckhole ,SUM(Contractor) AS contractor ,SUM([Debris/Litter]) AS debrisLitter ,SUM(Disability) AS disability ,SUM([Emergency Management]) AS emergencyManagement ,SUM([Environmental Concern]) AS environmentalConcern 
+                                  ,SUM(Forestry) AS forestry ,SUM(Graffiti) AS graffiti ,SUM(Guardrail) AS guardrail ,SUM([Illegal Dumping]+[Illegal Dumping and Junk/Trash]) AS illegalDumping ,SUM([Infrastructure Violation]) AS infrastructureViolation
+                                  ,SUM(Manhole) AS manhole ,SUM([New Construction]+[Ongoing Construction]) AS construction,SUM(Odor) AS odor,SUM([Operation Night Light]) AS operationNightLight ,SUM([Outside Entity]) AS outsideEntity ,SUM(Parks) AS parks ,SUM([Sanitary Sewer]) AS sanitarySewer
+                                  ,SUM([Sidewalks/Curbs]) AS sidewalksCurbs ,SUM([Signs/Traffic Signs]+[Signs/Traffic+Signs]+[Traffic Signals]) AS trafficSignsSignals ,SUM([Snow/Ice]) AS snowIce ,SUM([Spray Ground]) AS sprayGround ,SUM(Streets) AS streets
+                                   FROM MACDFCategoryBool GROUP BY township, city, zip, councilDistrict, censusTract, createYear")
+      
+      
       #Writing a CSV to save MACDFGroupedTract
       write.csv(MACDFGroupedTract, "C:/Users/mresner.KETERES/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/MACDFGroupedTract.csv", row.names=FALSE)
       
+      #Writing a CSV to save MACDFGroupedTractYearMonth
+      write.csv(MACDFGroupedTractYearMonth, "C:/Users/mresner.KETERES/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/4.MACDFGroupedTractYearMonth.csv", row.names=FALSE)
+      
+      #Writing a CSV to save MACDFGroupedTractYear
+      write.csv(MACDFGroupedTractYear, "C:/Users/mresner.KETERES/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/4.MACDFGroupedTractYear.csv", row.names=FALSE)
       
 #Step 3. Calling Census API to Connect Census Tracts with Demographic Information
 
       #Loading the Excel File
       library(readr)
       library(readxl)
-      MACDFGroupedTract <- read_csv("C:/Users/mresner.Keteres/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/4.MACDFGroupedTract.CSV")
-      View(MACDFGroupedTract)
+      MACDFGroupedTractYearMonth <- read_csv("C:/Users/mresner.Keteres/OneDrive - Keter Environmental Services/Personal/Data Science Projects/Mayors Action Center Ticket Analysis/4.MACDFGroupedTractYearMonth.CSV")
+      View(MACDFGroupedTractYearMonth)
       
       # Tidy Census Use
       install.packages("tidycensus")  
       library(tidycensus)
-      census_api_key("81ec59eceb4f13d873b70e45a9a8e5a1a88a984b", install = TRUE)
-      #Selecting Variables
+      library(dplyr)
+      install.packages("dplyr")
+      library(tidyverse)
+      census_api_key("81ec59eceb4f13d873b70e45a9a8e5a1a88a984b", install = TRUE, overwrite = TRUE)
+      
+      #Exploring census Variables https://api.census.gov/data/2020/dec/dhc/variables.html
       DHCVAR <- load_variables(2020,"dhc" )
       
-      #Test Calling Marion County Population
+      #Exploring ACS Variables
       
-      MarionPop <- get_decennial(
-        geography = "county",
-        variables = "P1_001N",
-        state = "IN",
-        county = "Marion",
-        year = 2020
+      ACSVAR <- load_variables(2021,"acs5" )
+      
+      #We are going to Connect to ACS estimates for median income, GINI COEF, population & population density
+      # Total Population B01003_001
+      # GINI B19083
+      # Median Income in the last 12 months B06011_001
+      
+      my_vars <- c(
+        totalPop = "B01003_001",
+        medianIncome = "B19013_001",
+        gini = "B19083_001"
       )
       
-      #Calling Population on the Tract Level
-      #tract = "TTRACT",
+      YearsinData <- sqldf("select DISTINCT createYear as Year FROM MACDFGroupedTractYear")
       
-      MarionPop <- get_decennial(
-        geography = "TTRACT",
-        variables = "P1_001N",
+      Years <- lst("2015", "2016", "2017", "2018", "2019", "2021", "2022")
+      
+      MyData <- get_acs(
+        geography = "TRACT",
+        variables =  my_vars,
+        state = "IN",
+        county = "Marion",
+        output = "wide",
+        year = Years,
+        survey = "acs5"
+      )
+      
+      AcsData <- map_dfr(
+        years,
+        ~ get_acs(
+          geography = "TRACT",
+          variables =  my_vars,
+          state = "IN",
+          county = "Marion",
+          output = "wide",
+          year = .x,
+          survey = "acs5",
+          geometry = FALSE
+        ),
+       .id = "Year"
+      )
         
-        state = "IN",
-        county = "Marion",
-        year = 2020
-      )
       
       
-      MarionPop <- get_decennial(
-        geography = "TTRACT",
-        variables = c(  
-                        population = "P1_001N",
-                        occHousingPop = "H8_001N"
-              
-                                       ),
-          
-        state = "IN",
-        county = "Marion",
-        year = 2020,
-        sumfile = "pl"
-      )
       
-      # Writing a loop to match demographic information with each census tract 
-      
-
+       
+    
 
 
 
