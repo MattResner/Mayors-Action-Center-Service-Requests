@@ -6,6 +6,8 @@ For more information surrounding the Mayor's Action Center visit their website a
 
 The initial Service Case dataset can be downloaded at https://data.indy.gov/datasets/mayors-action-center-service-cases/explore
 
+Model inspiration taken from https://scholar.harvard.edu/files/jfeigenbaum/files/feigenbaum_hall_respublica.pdf. 
+
 In this project I take the initial data on Mayor's Action Center Service Requests and transform the data by:
 
 	1. Loading, batching and geocoding the data with  tidygeocoder (Complete)
